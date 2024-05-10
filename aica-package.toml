@@ -1,46 +1,48 @@
-#syntax=ghcr.io/aica-technology/package-builder:v0.0.9
+#syntax=ghcr.io/aica-technology/package-builder:v1
+
+[metadata]
+version = "0.0.1"
+## add a description of the AICA package
+# description = "My custom package"
+
+## a metadata name for the collection is required when bundling multiple packages together.
+## the collection name should be formatted like a Docker image name,
+## and the ROS equivalent collection name must be formatted in lower_snake_case
+# [metadata.collection]
+# name = "template-custom-collection"
+# ros-name = "template_custom_collection"
 
 [build]
 type = "ros"
+image = "v1.0.1-iron"
 
-[build.cmake_args]
-# add any cmake args here, e.g.
+[build.cmake-args]
+## add any cmake args here, e.g.
 # SOME_FLAG = "ON"
-# you can override them in the CLI with `--build-arg config.build.cmake_args.SOME_FLAG=OFF`
+## you can override them in the CLI with `--build-arg config.build.cmake_args.SOME_FLAG=OFF`
 
-[build.environment.aica]
-image = "iron"
+[build.dependencies]
+"@aica/foss/control-libraries" = "v8.1.0"
+"@aica/foss/modulo" = "v4.1.0"
 
-[build.environment.aica.libraries]
-"@aica/foss/control-libraries" = "v7.2.0"
-
-[build.environment.aica.ros]
-"@aica/foss/modulo" = "v3.2.0"
-
-[build.environment.apt]
-# add any apt packages here, e.g.
-# libyaml-cpp-dev = "*"
-# these packages will be available during the build but not in the final image,
-# so they are useful for headers or static libraries but not for dynamic libraries
-
-[build.packages.component]
+[build.packages.template-component-package]
 source = "./source/template_component_package"
 
-[build.packages.component.dependencies.apt]
-# add any apt packages here, e.g.
+## add any required apt dependencies for the custom package.
+## these packages will be available during the build but also in the final image,
+## so they are useful for dynamic libraries
+# [build.packages.template-component-package.dependencies.apt]
 # libyaml-cpp-dev = "*"
-# these packages will be available during the build but also in the final image,
-# so they are useful for dynamic libraries
 
-# [build.packages.component.dependencies.pip]
-# by default, we will install any packages in `${source}/requirements.txt`
-# but you can customize the name of the file, e.g.
-# file = "requirements.txt"
-# otherwise you can specify the packages directly, e.g.
-# [build.packages.component.dependencies.pip.packages]
+## by default, we will install any pip packages in `${package_source}/requirements.txt`
+## but you can customize the name of the requirements file, e.g.
+# [build.packages.template-component-package.dependencies.pip]
+# file = "custom_requirements.txt"
+
+## otherwise you can specify the pip packages directly
+# [build.packages.template-component-package.dependencies.pip.packages]
 # numpy = "1.0.0"
 
-
-# add other components here, e.g.
-# [build.packages.component2]
-# source = "./source/new_component_package"
+## if the AICA package contains multiple ROS packages, repeat the process for each ROS package.
+# [build.packages.other-component-package]
+# source = "./source/other_component_package"
