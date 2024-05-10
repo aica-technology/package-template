@@ -4,8 +4,8 @@
   <name>template_component_package</name>
   <version>0.0.1</version>
   <description>TODO</description>
-  <maintainer email="todo@aica.tech">TODO</maintainer>
-  <license>TODO: License declaration</license>
+  <maintainer email="todo@example.com">TODO</maintainer>
+  <license>GPLv3</license>
 
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
   <buildtool_depend>ament_cmake_python</buildtool_depend>
