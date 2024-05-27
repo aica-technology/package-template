@@ -22,8 +22,8 @@ image = "v1.0.1-iron"
 ## you can override them in the CLI with `--build-arg config.build.cmake_args.SOME_FLAG=OFF`
 
 [build.dependencies]
-"@aica/foss/control-libraries" = "v8.1.0"
-"@aica/foss/modulo" = "v4.1.0"
+"@aica/foss/control-libraries" = "v7.4.1"
+"@aica/foss/modulo" = "v4.2.0"
 
 [build.packages.template-component-package]
 source = "./source/template_component_package"
