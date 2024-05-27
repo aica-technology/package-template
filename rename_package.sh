@@ -1,27 +1,25 @@
 #!/bin/bash
 
-HELP_MESSAGE="Usage: $0 OLD_PACKAGE_NAME NEW_PACKAGE_NAME [--dry-run]
+HELP_MESSAGE="Usage: $0 NEW_PACKAGE_NAME [--dry-run]
 
-Rename a package by replacing all text occurences of the old package name with
-the new package name and renaming all matching files and directories.
+Rename a package by replacing all text occurences of template_component_package
+with the new package name and renaming all matching files and directories.
 
-The first positional argument is the old package name to replace.
-
-The second positional argument is the desired new package name.
+The requierd positional argument is the old package name to replace.
 
 Use --dry-run to prevent any filesystem changes while testing the usage.
 
-This script replaces all text occurences of OLD_PACKAGE_NAME with NEW_PACKAGE_NAME
-in all files in the following search paths:
+This script replaces all text occurences of template_component_package with
+NEW_PACKAGE_NAME in all files in the following search paths:
   - ./.devcontainer.json
   - ./aica-package.toml
   - ./source/**
 
 It also replaces all hyphenated occurences of the package names in the same search paths
-(i.e. OLD-PACKAGE-NAME would be replaced with NEW-PACKAGE-NAME).
+(i.e. template-component-package would be replaced with NEW-PACKAGE-NAME).
 
-Finally, it renames all files and directories that contain OLD_PACKAGE_NAME in their names
-to the equivalent name using NEW_PACKAGE_NAME in the following search paths:
+Finally, it renames all files and directories that contain template_component_package in
+their names to the equivalent name using NEW_PACKAGE_NAME in the following search paths:
   - .source/**
 
 Options:
@@ -45,12 +43,12 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
-if [[ "${#POSITIONAL_ARGS[@]}" -lt 2 ]]; then
+if [[ "${#POSITIONAL_ARGS[@]}" -ne 1 ]]; then
   echo "${HELP_MESSAGE}"
   exit 1
 fi
 
-OLD_NAME="${POSITIONAL_ARGS[0]}"
+OLD_NAME=template_component_package
 NEW_NAME="${POSITIONAL_ARGS[1]}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"

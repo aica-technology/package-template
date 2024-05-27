@@ -30,7 +30,7 @@ do is rename the package to a meaningful custom name. This can be accomplished u
 [`rename_package.sh`](./rename_package.sh) (use `./rename_package.sh --help` for more information). For example:
 
 ```bash
-./rename_package.sh template_component_package my_custom_package [--dry-run]
+./rename_package.sh my_custom_package [--dry-run]
 ```
 
 If you want to include a second ROS package within the AICA package, you will need to create a new package folder in `source`
