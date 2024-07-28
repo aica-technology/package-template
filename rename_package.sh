@@ -49,7 +49,7 @@ if [[ "${#POSITIONAL_ARGS[@]}" -ne 1 ]]; then
 fi
 
 OLD_NAME=template_component_package
-NEW_NAME="${POSITIONAL_ARGS[1]}"
+NEW_NAME="${POSITIONAL_ARGS[0]}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
@@ -108,7 +108,7 @@ replace_text_in_file "${SCRIPT_DIR}/.devcontainer.json"
 replace_text_in_file "${SCRIPT_DIR}/aica-package.toml"
 
 RENAME_DIRECTORIES=()
-for FIND_PATH in $(find "${SCRIPT_DIR}/source2"); do
+for FIND_PATH in $(find "${SCRIPT_DIR}/source"); do
 
   BASENAME=$(basename $FIND_PATH)
 
