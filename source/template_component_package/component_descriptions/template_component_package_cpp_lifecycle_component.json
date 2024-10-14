@@ -1,4 +1,5 @@
 {
+  "$schema": "https://docs.aica.tech/schemas/1-1-1/component.schema.json",
   "name": "Template CPP Lifecycle Component",
   "description": {
     "brief": "Brief description of the component",
