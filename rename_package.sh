@@ -2,20 +2,20 @@
 
 HELP_MESSAGE="Usage: $0 NEW_PACKAGE_NAME [--dry-run]
 
-Rename a package by replacing all text occurences of template_component_package
+Rename a package by replacing all text occurrences of template_component_package
 with the new package name and renaming all matching files and directories.
 
-The requierd positional argument is the old package name to replace.
+The required positional argument is the old package name to replace.
 
 Use --dry-run to prevent any filesystem changes while testing the usage.
 
-This script replaces all text occurences of template_component_package with
+This script replaces all text occurrences of template_component_package with
 NEW_PACKAGE_NAME in all files in the following search paths:
   - ./.devcontainer.json
   - ./aica-package.toml
   - ./source/**
 
-It also replaces all hyphenated occurences of the package names in the same search paths
+It also replaces all hyphenated occurrences of the package names in the same search paths
 (i.e. template-component-package would be replaced with NEW-PACKAGE-NAME).
 
 Finally, it renames all files and directories that contain template_component_package in
