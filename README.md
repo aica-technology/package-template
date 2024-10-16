@@ -114,4 +114,4 @@ numpy = "1.0.0"
 ## Using your component package
 
 After you have built and tagged your package as a docker image, you can use it in your application. See the
-[AICA documentation](https://docs.aica.tech/docs/getting-started/installation#configuring-a-runtime-image-with-add-on-packages) for more details.
+[AICA documentation](https://docs.aica.tech/docs/getting-started/installation-and-launch#configuring-the-aica-system-image) for more details.
