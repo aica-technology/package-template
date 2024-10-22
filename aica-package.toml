@@ -1,4 +1,4 @@
-#syntax=ghcr.io/aica-technology/package-builder:v1.2.0
+#syntax=ghcr.io/aica-technology/package-builder:v1.2.1
 
 [metadata]
 version = "0.0.1"
