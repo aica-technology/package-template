@@ -1,4 +1,4 @@
-#syntax=ghcr.io/aica-technology/package-builder:v1.1.1
+#syntax=ghcr.io/aica-technology/package-builder:v1.2.0
 
 [metadata]
 version = "0.0.1"
@@ -23,7 +23,7 @@ image = "v2.0.0-jazzy"
 
 [build.dependencies]
 "@aica/foss/control-libraries" = "v9.0.0"
-"@aica/foss/modulo" = "v5.0.0"
+"@aica/foss/modulo" = "v5.0.1"
 
 [build.packages.template-component-package]
 source = "./source/template_component_package"

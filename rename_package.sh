@@ -12,6 +12,7 @@ Use --dry-run to prevent any filesystem changes while testing the usage.
 This script replaces all text occurrences of template_component_package with
 NEW_PACKAGE_NAME in all files in the following search paths:
   - ./.devcontainer.json
+  - ./.github/workflows/build.yml
   - ./aica-package.toml
   - ./source/**
 
@@ -100,6 +101,7 @@ echo "  - ${NEW_NAME}"
 echo "  - ${NEW_NAME//_/-}"
 echo "in the following search paths:"
 echo "  - ${SCRIPT_DIR}/.devcontainer.json"
+echo "  - ${SCRIPT_DIR}/.github/workflows/build.yml"
 echo "  - ${SCRIPT_DIR}/aica-package.toml"
 echo "  - ${SCRIPT_DIR}/source/**"
 echo
