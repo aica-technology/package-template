@@ -1,7 +1,9 @@
 name: Build and Test
 
 on:
-  push:
+  workflow_dispatch:
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   test:
@@ -15,9 +17,10 @@ jobs:
         run: |
           docker build -f aica-package.toml --target test .
 
-  build:
+  build-push:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
-    name: Build
+    name: Build and push
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
