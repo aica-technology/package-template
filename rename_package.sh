@@ -107,7 +107,7 @@ echo "  - ${SCRIPT_DIR}/source/**"
 echo
 
 replace_text_in_file "${SCRIPT_DIR}/.devcontainer.json"
-replace_text_in_file "${SCRIPT_DIR}/.github/workflows/build.yml"
+replace_text_in_file "${SCRIPT_DIR}/.github/workflows/build-test.yml"
 replace_text_in_file "${SCRIPT_DIR}/aica-package.toml"
 
 RENAME_DIRECTORIES=()
