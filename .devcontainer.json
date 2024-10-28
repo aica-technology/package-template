@@ -12,9 +12,7 @@
     "image": "aica-technology/template-component-package:development",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/ros2/.devcontainer,type=bind,consistency=cached",
     "workspaceFolder": "/home/ros2/.devcontainer",
-    "mounts": [
-        "source=${localWorkspaceFolder}/source,target=/home/ros2/ws/src,type=bind,consistency=cached"
-    ],
+    "postStartCommand": "rm -r /home/ros2/ws/template_component_package && ln -s ${localWorkspaceFolder}/source/template_component_package /home/ros2/ws/src/template_component_package",
     "customizations": {
         "vscode": {
             "extensions": [
