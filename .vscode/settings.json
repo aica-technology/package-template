@@ -7,25 +7,9 @@
         "editor.defaultFormatter": "xaver.clang-format",
         "editor.inlayHints.enabled": "on"
     },
-    "python.analysis.typeCheckingMode": "basic",
-    "python.languageServer": "Pylance",
-    "autopep8.args": [
-        "--max-line-length",
-        "120",
-        "--experimental"
-    ],
-    "pylint.args": [
-        "--generate-members",
-        "--max-line-length",
-        "120",
-        "-d",
-        "C0114",
-        "-d",
-        "C0115",
-        "-d",
-        "C0116"
-    ],
     "editor.rulers": [
         120
     ],
+    "ruff.nativeServer": "on",
+    "ruff.lineLength": 120,
 }
