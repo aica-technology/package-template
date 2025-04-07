@@ -11,7 +11,7 @@ bool CPPComponent::on_validate_parameter_callback(const std::shared_ptr<state_re
   return true;
 }
 
-void CppComponent::on_step_callback() {
+void CPPComponent::on_step_callback() {
   return;
 }
 
