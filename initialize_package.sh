@@ -66,10 +66,10 @@ prompt_yesno() {
   local prompt_msg="$1"
   local ans
   while true; do
-    read -p $'\e[3;36m'"${prompt_msg} [y/n]:"$'\e[0m ' ans
+    read -p $'\e[3;36m'"${prompt_msg} [Y/n]:"$'\e[0m ' ans
     # If no input, default to "n"
     if [[ -z "$ans" ]]; then
-      ans="n"
+      ans="y"
     fi
     ans=$(echo "$ans" | tr '[:upper:]' '[:lower:]')
     if [[ "$ans" == "y" || "$ans" == "yes" ]]; then
