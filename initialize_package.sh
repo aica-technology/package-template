@@ -241,28 +241,35 @@ if [[ -f "${FILE_TO_MODIFY}" && "${INCLUDE_PYTHON}" == "yes" ]]; then
 fi
 
 # For C++: if C++ is not included, update CMakeLists.txt.
-if [[ "${INCLUDE_CPP}" == "no" ]]; then
-  CMAKE_FILE="${SCRIPT_DIR}/source/${OLD_NAME}/CMakeLists.txt"
-  if [[ -f "${CMAKE_FILE}" ]]; then
-    log "Removing C++ component registration from ${CMAKE_FILE}..."
-    if [[ "${DRY_RUN}" == true ]]; then
-      log "Dry run: would remove lines containing 'CPPComponent', 'CPPLifecycleComponent', or related tags from ${CMAKE_FILE}"
+CMAKE_FILE="${SCRIPT_DIR}/source/${OLD_NAME}/CMakeLists.txt"
+if [[ -f "${CMAKE_FILE}" ]]; then
+  log "Updating CMakeLists.txt: ${CMAKE_FILE}..."
+  
+  sed_inplace() {
+    local script="$1"
+    local file="$2"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      sed -i '' "$script" "$file"
     else
-      sed_inplace() {
-        local script="$1"
-        local file="$2"
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-          sed -i '' "$script" "$file"
-        else
-          sed -i "$script" "$file"
-        fi
-      }
-      sed_inplace '/CPPComponent/d' "${CMAKE_FILE}"
-      sed_inplace '/CPPLifecycleComponent/d' "${CMAKE_FILE}"
-      sed_inplace '/cpp_component/d' "${CMAKE_FILE}"
-      sed_inplace '/cpp_lifecycle_component/d' "${CMAKE_FILE}"
-      sed_inplace '/### Register C++ Components ###/d' "${CMAKE_FILE}"
+      sed -i "$script" "$file"
     fi
+  }
+
+  if [[ "${INCLUDE_CPP_COMPONENT}" == "no" ]]; then
+    log "Removing standard C++ component registration..."
+    sed_inplace '/CPPComponent/d' "${CMAKE_FILE}"
+    sed_inplace '/cpp_component/d' "${CMAKE_FILE}"
+  fi
+
+  if [[ "${INCLUDE_CPP_LIFECYCLE}" == "no" ]]; then
+    log "Removing C++ lifecycle component registration..."
+    sed_inplace '/CPPLifecycleComponent/d' "${CMAKE_FILE}"
+    sed_inplace '/cpp_lifecycle_component/d' "${CMAKE_FILE}"
+  fi
+
+  # Optionally, remove a header comment if both sections are removed.
+  if [[ "${INCLUDE_CPP_COMPONENT}" == "no" && "${INCLUDE_CPP_LIFECYCLE}" == "no" ]]; then
+    sed_inplace '/### Register C++ Components ###/d' "${CMAKE_FILE}"
   fi
 fi
 
