@@ -1,5 +1,5 @@
-from modulo_components.component import Component
 import state_representation as sr
+from modulo_components.component import Component
 
 
 class PyComponent(Component):
@@ -10,7 +10,7 @@ class PyComponent(Component):
     def on_validate_parameter_callback(self, parameter: sr.Parameter) -> bool:
         # validate an incoming parameter value according to some criteria
         return True
-    
+
     def on_step_callback(self):
         # do something periodically
         pass

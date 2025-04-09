@@ -1,8 +1,7 @@
 #include "template_component_package/CPPComponent.hpp"
 
 namespace template_component_package {
-CPPComponent::CPPComponent(const rclcpp::NodeOptions& options) :
-    modulo_components::Component(options, "CPPComponent") {
+CPPComponent::CPPComponent(const rclcpp::NodeOptions& options) : modulo_components::Component(options, "CPPComponent") {
   // add parameters, inputs and outputs here
 }
 
@@ -26,7 +25,7 @@ void CPPComponent::on_step_callback() {
 //   return true;
 // }
 
-} // namespace template_component_package
+}// namespace template_component_package
 
 #include "rclcpp_components/register_node_macro.hpp"
 
