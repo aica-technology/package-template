@@ -1,5 +1,5 @@
-from modulo_components.lifecycle_component import LifecycleComponent
 import state_representation as sr
+from modulo_components.lifecycle_component import LifecycleComponent
 
 
 class PyLifecycleComponent(LifecycleComponent):
