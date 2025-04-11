@@ -14,15 +14,26 @@ This script initializes the package by prompting you to choose which component v
 Based on your choices, it will set up (or remove) the corresponding files and directories.
 
 Options:
-  -n, --dry-run    Display the actions without making any changes.
-  -h, --help       Show this help message."
+  --dry-run    Display the actions without making any changes.
+  -h, --help   Show this help message."
 
 DRY_RUN=false
+
+# Get script directory.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# (1) Check that the package folder is still the pristine template.
+EXPECTED_FOLDER="${OLD_NAME}"
+if [ ! -d "${SCRIPT_DIR}/source/${EXPECTED_FOLDER}" ]; then
+  echo "ERROR: Expected package folder '${EXPECTED_FOLDER}' not found in ${SCRIPT_DIR}/source."
+  echo "It appears that the package has already been modified. Aborting."
+  exit 1
+fi
 
 # Process options.
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -n|--dry-run)
+    --dry-run)
       DRY_RUN=true
       shift
       ;;
@@ -41,12 +52,16 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Logging helper.
+
+
+##############################
+# Function definitions       #
+##############################
+
 log() {
   echo "$1"
 }
 
-# Prompt until nonempty input is given.
 prompt_nonempty() {
   local prompt_msg="$1"
   local input
@@ -61,13 +76,11 @@ prompt_nonempty() {
   done
 }
 
-# Prompt for yes/no input with a default of "no" if empty.
 prompt_yesno() {
   local prompt_msg="$1"
   local ans
   while true; do
     read -p $'\e[3;36m'"${prompt_msg} [Y/n]:"$'\e[0m ' ans
-    # If no input, default to "n"
     if [[ -z "$ans" ]]; then
       ans="y"
     fi
@@ -84,8 +97,59 @@ prompt_yesno() {
   done
 }
 
-# Get script directory.
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+delete_path() {
+  local path="$1"
+  if [ -e "${path}" ]; then
+    if [[ "${DRY_RUN}" == true ]]; then
+      log "Dry run: would delete ${path}"
+    else
+      rm -rf "${path}"
+      log "Deleted ${path}"
+    fi
+  else
+    log "Not found: ${path}"
+  fi
+}
+
+# OS-agnostic in-place sed.
+sed_inplace() {
+  local script="$1"
+  local file="$2"
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' "$script" "$file"
+  else
+    sed -i "$script" "$file"
+  fi
+}
+
+replace_text_in_file() {
+  local file="$1"
+  log "Replacing text in file: ${file}"
+  if [[ "${DRY_RUN}" == true ]]; then
+    return
+  fi
+  sed_inplace "s/${OLD_NAME}/${NEW_PACKAGE_NAME}/g" "${file}"
+  local HYPHENATED_OLD="${OLD_NAME//_/-}"
+  local HYPHENATED_NEW="${NEW_PACKAGE_NAME//_/-}"
+  sed_inplace "s/${HYPHENATED_OLD}/${HYPHENATED_NEW}/g" "${file}"
+}
+
+rename_item() {
+  local old_path="$1"
+  local base
+  base=$(basename "${old_path}")
+  local new_base="${base//${OLD_NAME}/${NEW_PACKAGE_NAME}}"
+  local new_path
+  new_path="$(dirname "${old_path}")/${new_base}"
+  log "Renaming: ${old_path}  -->  ${new_path}"
+  if [[ "${DRY_RUN}" == false ]]; then
+    mv "${old_path}" "${new_path}"
+  fi
+}
+
+##############################
+# Main execution flow        #
+##############################
 
 # Prompt for the new package name.
 NEW_PACKAGE_NAME=$(prompt_nonempty "Enter the new component package name:")
@@ -109,7 +173,7 @@ else
   INCLUDE_CPP="no"
 fi
 
-# Display choices.
+# Display the choices.
 echo
 log "New Package Name        : ${NEW_PACKAGE_NAME}"
 log "Include Python?         : ${INCLUDE_PYTHON}"
@@ -137,7 +201,6 @@ if [[ "${INCLUDE_PYTHON}" == "no" ]]; then
     "source/${OLD_NAME}/component_descriptions/${OLD_NAME}_py_lifecycle_component.json"
   )
 else
-  # If a specific Python variant is not selected, remove its files.
   if [[ "${INCLUDE_PYTHON_COMPONENT}" == "no" ]]; then
     log "Python Component not selected; deleting Python Component files..."
     FILES_TO_DELETE+=(
@@ -170,7 +233,6 @@ if [[ "${INCLUDE_CPP}" == "no" ]]; then
     "source/${OLD_NAME}/component_descriptions/${OLD_NAME}_cpp_lifecycle_component.json"
   )
 else
-  # For C++ included, delete the variant not selected.
   if [[ "${INCLUDE_CPP_COMPONENT}" == "no" ]]; then
     log "C++ Component not selected; deleting C++ Component files..."
     FILES_TO_DELETE+=(
@@ -191,27 +253,13 @@ else
   fi
 fi
 
-# Function to delete a file or directory.
-delete_path() {
-  local path="$1"
-  if [ -e "${path}" ]; then
-    if [[ "${DRY_RUN}" == true ]]; then
-      log "Dry run: would delete ${path}"
-    else
-      rm -rf "${path}"
-      log "Deleted ${path}"
-    fi
-  else
-    log "Not found: ${path}"
-  fi
-}
-
 # Delete the specified files/directories.
 for path in "${FILES_TO_DELETE[@]}"; do
   delete_path "${SCRIPT_DIR}/${path}"
 done
 
 # --- Modify configuration files ---
+
 # For Python: adjust setup.cfg based on which Python variant is kept.
 FILE_TO_MODIFY="${SCRIPT_DIR}/source/${OLD_NAME}/setup.cfg"
 if [[ -f "${FILE_TO_MODIFY}" && "${INCLUDE_PYTHON}" == "yes" ]]; then
@@ -240,40 +288,29 @@ if [[ -f "${FILE_TO_MODIFY}" && "${INCLUDE_PYTHON}" == "yes" ]]; then
   fi
 fi
 
-# For C++: if C++ is not included, update CMakeLists.txt.
+# For C++: update CMakeLists.txt only if not in dry-run mode.
 CMAKE_FILE="${SCRIPT_DIR}/source/${OLD_NAME}/CMakeLists.txt"
 if [[ -f "${CMAKE_FILE}" ]]; then
   log "Updating CMakeLists.txt: ${CMAKE_FILE}..."
-  
-  sed_inplace() {
-    local script="$1"
-    local file="$2"
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-      sed -i '' "$script" "$file"
-    else
-      sed -i "$script" "$file"
+  if [[ "${DRY_RUN}" == true ]]; then
+    log "Dry run: CMakeLists.txt would be updated (component registrations removed based on selection)."
+  else
+    if [[ "${INCLUDE_CPP_COMPONENT}" == "no" ]]; then
+      log "Removing standard C++ component registration..."
+      sed_inplace '/CPPComponent/d' "${CMAKE_FILE}"
+      sed_inplace '/cpp_component/d' "${CMAKE_FILE}"
     fi
-  }
-
-  if [[ "${INCLUDE_CPP_COMPONENT}" == "no" ]]; then
-    log "Removing standard C++ component registration..."
-    sed_inplace '/CPPComponent/d' "${CMAKE_FILE}"
-    sed_inplace '/cpp_component/d' "${CMAKE_FILE}"
-  fi
-
-  if [[ "${INCLUDE_CPP_LIFECYCLE}" == "no" ]]; then
-    log "Removing C++ lifecycle component registration..."
-    sed_inplace '/CPPLifecycleComponent/d' "${CMAKE_FILE}"
-    sed_inplace '/cpp_lifecycle_component/d' "${CMAKE_FILE}"
-  fi
-
-  # Optionally, remove a header comment if both sections are removed.
-  if [[ "${INCLUDE_CPP_COMPONENT}" == "no" && "${INCLUDE_CPP_LIFECYCLE}" == "no" ]]; then
-    sed_inplace '/### Register C++ Components ###/d' "${CMAKE_FILE}"
+    if [[ "${INCLUDE_CPP_LIFECYCLE}" == "no" ]]; then
+      log "Removing C++ lifecycle component registration..."
+      sed_inplace '/CPPLifecycleComponent/d' "${CMAKE_FILE}"
+      sed_inplace '/cpp_lifecycle_component/d' "${CMAKE_FILE}"
+    fi
+    if [[ "${INCLUDE_CPP_COMPONENT}" == "no" && "${INCLUDE_CPP_LIFECYCLE}" == "no" ]]; then
+      sed_inplace '/### Register C++ Components ###/d' "${CMAKE_FILE}"
+    fi
   fi
 fi
 
-# Confirm dry run.
 if [[ "${DRY_RUN}" == true ]]; then
   log "=== THIS IS A DRY RUN! NO FILE OR FILESYSTEM CHANGES WILL BE MADE ==="
   echo
@@ -296,48 +333,12 @@ log "  - ${SCRIPT_DIR}/aica-package.toml"
 log "  - All files under ${SCRIPT_DIR}/source/"
 echo
 
-# Function to run sed in-place with OS-specific options.
-sed_inplace() {
-  local script="$1"
-  local file="$2"
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    sed -i '' "$script" "$file"
-  else
-    sed -i "$script" "$file"
-  fi
-}
-
-# Replace text in a given file.
-replace_text_in_file() {
-  local file="$1"
-  log "Replacing text in file: ${file}"
-  if [[ "${DRY_RUN}" == true ]]; then
-    return
-  fi
-  sed_inplace "s/${OLD_NAME}/${NEW_PACKAGE_NAME}/g" "${file}"
-  sed_inplace "s/${HYPHENATED_OLD}/${HYPHENATED_NEW}/g" "${file}"
-}
-
 # Replace text in fixed files.
 replace_text_in_file "${SCRIPT_DIR}/.devcontainer.json"
 replace_text_in_file "${SCRIPT_DIR}/.github/workflows/build-test.yml"
 replace_text_in_file "${SCRIPT_DIR}/aica-package.toml"
 
-# Rename function for files or directories.
-rename_item() {
-  local old_path="$1"
-  local base
-  base=$(basename "${old_path}")
-  local new_base="${base//${OLD_NAME}/${NEW_PACKAGE_NAME}}"
-  local new_path
-  new_path="$(dirname "${old_path}")/${new_base}"
-  log "Renaming: ${old_path}  -->  ${new_path}"
-  if [[ "${DRY_RUN}" == false ]]; then
-    mv "${old_path}" "${new_path}"
-  fi
-}
-
-# Process files under source/: replace text and schedule renaming if needed.
+# Process files under source/: replace text and schedule renaming.
 declare -a DIRS_TO_RENAME
 while IFS= read -r -d '' path; do
   base=$(basename "${path}")
