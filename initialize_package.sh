@@ -22,7 +22,7 @@ DRY_RUN=false
 # Get script directory.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# (1) Check that the package folder is still the pristine template.
+# (1) Check that the package folder is still the original template.
 EXPECTED_FOLDER="${OLD_NAME}"
 if [ ! -d "${SCRIPT_DIR}/source/${EXPECTED_FOLDER}" ]; then
   echo "ERROR: Expected package folder '${EXPECTED_FOLDER}' not found in ${SCRIPT_DIR}/source."
