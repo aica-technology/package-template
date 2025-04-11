@@ -58,10 +58,6 @@ done
 # Function definitions       #
 ##############################
 
-log() {
-  echo "$1"
-}
-
 prompt_nonempty() {
   local prompt_msg="$1"
   local input
@@ -71,7 +67,7 @@ prompt_nonempty() {
       echo "${input}"
       return
     else
-      log "Input cannot be empty. Please try again."
+      echo "Input cannot be empty. Please try again."
     fi
   done
 }
@@ -92,7 +88,7 @@ prompt_yesno() {
       echo "no"
       return
     else
-      log "Invalid input. Please enter y or n. (Default is n)"
+      echo "Invalid input. Please enter y or n. (Default is n)"
     fi
   done
 }
@@ -101,13 +97,13 @@ delete_path() {
   local path="$1"
   if [ -e "${path}" ]; then
     if [[ "${DRY_RUN}" == true ]]; then
-      log "Dry run: would delete ${path}"
+      echo "Dry run: would delete ${path}"
     else
       rm -rf "${path}"
-      log "Deleted ${path}"
+      echo "Deleted ${path}"
     fi
   else
-    log "Not found: ${path}"
+    echo "Not found: ${path}"
   fi
 }
 
@@ -124,7 +120,7 @@ sed_inplace() {
 
 replace_text_in_file() {
   local file="$1"
-  log "Replacing text in file: ${file}"
+  echo "Replacing text in file: ${file}"
   if [[ "${DRY_RUN}" == true ]]; then
     return
   fi
@@ -141,7 +137,7 @@ rename_item() {
   local new_base="${base//${OLD_NAME}/${NEW_PACKAGE_NAME}}"
   local new_path
   new_path="$(dirname "${old_path}")/${new_base}"
-  log "Renaming: ${old_path}  -->  ${new_path}"
+  echo "Renaming: ${old_path}  -->  ${new_path}"
   if [[ "${DRY_RUN}" == false ]]; then
     mv "${old_path}" "${new_path}"
   fi
@@ -175,16 +171,16 @@ fi
 
 # Display the choices.
 echo
-log "New Package Name        : ${NEW_PACKAGE_NAME}"
-log "Include Python?         : ${INCLUDE_PYTHON}"
+echo "New Package Name        : ${NEW_PACKAGE_NAME}"
+echo "Include Python?         : ${INCLUDE_PYTHON}"
 if [[ "${INCLUDE_PYTHON}" == "yes" ]]; then
-  log "  - Python Lifecycle    : ${INCLUDE_PYTHON_LIFECYCLE}"
-  log "  - Python Component    : ${INCLUDE_PYTHON_COMPONENT}"
+  echo "  - Python Lifecycle    : ${INCLUDE_PYTHON_LIFECYCLE}"
+  echo "  - Python Component    : ${INCLUDE_PYTHON_COMPONENT}"
 fi
-log "Include C++?            : ${INCLUDE_CPP}"
+echo "Include C++?            : ${INCLUDE_CPP}"
 if [[ "${INCLUDE_CPP}" == "yes" ]]; then
-  log "  - C++ Lifecycle       : ${INCLUDE_CPP_LIFECYCLE}"
-  log "  - C++ Component       : ${INCLUDE_CPP_COMPONENT}"
+  echo "  - C++ Lifecycle       : ${INCLUDE_CPP_LIFECYCLE}"
+  echo "  - C++ Component       : ${INCLUDE_CPP_COMPONENT}"
 fi
 echo
 
@@ -193,7 +189,7 @@ FILES_TO_DELETE=()
 
 # --- Python-related files ---
 if [[ "${INCLUDE_PYTHON}" == "no" ]]; then
-  log "Python not selected; deleting all Python-related files..."
+  echo "Python not selected; deleting all Python-related files..."
   FILES_TO_DELETE+=(
     "source/${OLD_NAME}/${OLD_NAME}"
     "source/${OLD_NAME}/test/python_tests"
@@ -202,7 +198,7 @@ if [[ "${INCLUDE_PYTHON}" == "no" ]]; then
   )
 else
   if [[ "${INCLUDE_PYTHON_COMPONENT}" == "no" ]]; then
-    log "Python Component not selected; deleting Python Component files..."
+    echo "Python Component not selected; deleting Python Component files..."
     FILES_TO_DELETE+=(
       "source/${OLD_NAME}/${OLD_NAME}/py_component.py"
       "source/${OLD_NAME}/test/python_tests/test_py_component.py"
@@ -210,7 +206,7 @@ else
     )
   fi
   if [[ "${INCLUDE_PYTHON_LIFECYCLE}" == "no" ]]; then
-    log "Python Lifecycle not selected; deleting Python Lifecycle files..."
+    echo "Python Lifecycle not selected; deleting Python Lifecycle files..."
     FILES_TO_DELETE+=(
       "source/${OLD_NAME}/${OLD_NAME}/py_lifecycle_component.py"
       "source/${OLD_NAME}/test/python_tests/test_py_lifecycle_component.py"
@@ -221,7 +217,7 @@ fi
 
 # --- C++-related files ---
 if [[ "${INCLUDE_CPP}" == "no" ]]; then
-  log "C++ not selected; deleting all C++-related files..."
+  echo "C++ not selected; deleting all C++-related files..."
   FILES_TO_DELETE+=(
     "source/${OLD_NAME}/include"
     "source/${OLD_NAME}/src"
@@ -234,7 +230,7 @@ if [[ "${INCLUDE_CPP}" == "no" ]]; then
   )
 else
   if [[ "${INCLUDE_CPP_COMPONENT}" == "no" ]]; then
-    log "C++ Component not selected; deleting C++ Component files..."
+    echo "C++ Component not selected; deleting C++ Component files..."
     FILES_TO_DELETE+=(
       "source/${OLD_NAME}/src/CPPComponent.cpp"
       "source/${OLD_NAME}/test/cpp_tests/test_cpp_component.cpp"
@@ -243,7 +239,7 @@ else
     )
   fi
   if [[ "${INCLUDE_CPP_LIFECYCLE}" == "no" ]]; then
-    log "C++ Lifecycle not selected; deleting C++ Lifecycle files..."
+    echo "C++ Lifecycle not selected; deleting C++ Lifecycle files..."
     FILES_TO_DELETE+=(
       "source/${OLD_NAME}/src/CPPLifecycleComponent.cpp"
       "source/${OLD_NAME}/test/cpp_tests/test_cpp_lifecycle_component.cpp"
@@ -264,9 +260,9 @@ done
 FILE_TO_MODIFY="${SCRIPT_DIR}/source/${OLD_NAME}/setup.cfg"
 if [[ -f "${FILE_TO_MODIFY}" && "${INCLUDE_PYTHON}" == "yes" ]]; then
   if [[ "${INCLUDE_PYTHON_COMPONENT}" == "no" && "${INCLUDE_PYTHON_LIFECYCLE}" == "yes" ]]; then
-    log "Removing non-lifecycle Python entry point from setup.cfg..."
+    echo "Removing non-lifecycle Python entry point from setup.cfg..."
     if [[ "${DRY_RUN}" == true ]]; then
-      log "Dry run: would remove lines matching '::PyComponent' from ${FILE_TO_MODIFY}"
+      echo "Dry run: would remove lines matching '::PyComponent' from ${FILE_TO_MODIFY}"
     else
       if [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i '' '/'"${OLD_NAME}"'::PyComponent/d' "${FILE_TO_MODIFY}"
@@ -275,9 +271,9 @@ if [[ -f "${FILE_TO_MODIFY}" && "${INCLUDE_PYTHON}" == "yes" ]]; then
       fi
     fi
   elif [[ "${INCLUDE_PYTHON_LIFECYCLE}" == "no" && "${INCLUDE_PYTHON_COMPONENT}" == "yes" ]]; then
-    log "Removing lifecycle Python entry point from setup.cfg..."
+    echo "Removing lifecycle Python entry point from setup.cfg..."
     if [[ "${DRY_RUN}" == true ]]; then
-      log "Dry run: would remove lines matching '::PyLifecycleComponent' from ${FILE_TO_MODIFY}"
+      echo "Dry run: would remove lines matching '::PyLifecycleComponent' from ${FILE_TO_MODIFY}"
     else
       if [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i '' '/'"${OLD_NAME}"'::PyLifecycleComponent/d' "${FILE_TO_MODIFY}"
@@ -291,17 +287,17 @@ fi
 # For C++: update CMakeLists.txt only if not in dry-run mode.
 CMAKE_FILE="${SCRIPT_DIR}/source/${OLD_NAME}/CMakeLists.txt"
 if [[ -f "${CMAKE_FILE}" ]]; then
-  log "Updating CMakeLists.txt: ${CMAKE_FILE}..."
+  echo "Updating CMakeLists.txt: ${CMAKE_FILE}..."
   if [[ "${DRY_RUN}" == true ]]; then
-    log "Dry run: CMakeLists.txt would be updated (component registrations removed based on selection)."
+    echo "Dry run: CMakeLists.txt would be updated (component registrations removed based on selection)."
   else
     if [[ "${INCLUDE_CPP_COMPONENT}" == "no" ]]; then
-      log "Removing standard C++ component registration..."
+      echo "Removing standard C++ component registration..."
       sed_inplace '/CPPComponent/d' "${CMAKE_FILE}"
       sed_inplace '/cpp_component/d' "${CMAKE_FILE}"
     fi
     if [[ "${INCLUDE_CPP_LIFECYCLE}" == "no" ]]; then
-      log "Removing C++ lifecycle component registration..."
+      echo "Removing C++ lifecycle component registration..."
       sed_inplace '/CPPLifecycleComponent/d' "${CMAKE_FILE}"
       sed_inplace '/cpp_lifecycle_component/d' "${CMAKE_FILE}"
     fi
@@ -312,29 +308,29 @@ if [[ -f "${CMAKE_FILE}" ]]; then
 fi
 
 if [[ "${DRY_RUN}" == true ]]; then
-  log "=== THIS IS A DRY RUN! NO FILE OR FILESYSTEM CHANGES WILL BE MADE ==="
+  echo "=== THIS IS A DRY RUN! NO FILE OR FILESYSTEM CHANGES WILL BE MADE ==="
   echo
 fi
 
 # Summary of text replacement action.
 HYPHENATED_OLD="${OLD_NAME//_/-}"
 HYPHENATED_NEW="${NEW_PACKAGE_NAME//_/-}"
-log "The following replacements will be performed:"
-log "  Text occurrences of:"
-log "    - ${OLD_NAME}"
-log "    - ${HYPHENATED_OLD}"
-log "  will be replaced with:"
-log "    - ${NEW_PACKAGE_NAME}"
-log "    - ${HYPHENATED_NEW}"
-log "in the following files:"
-log "  - ${SCRIPT_DIR}/.devcontainer.json"
-log "  - ${SCRIPT_DIR}/.github/workflows/build-test.yml"
-log "  - ${SCRIPT_DIR}/aica-package.toml"
-log "  - All files under ${SCRIPT_DIR}/source/"
+echo "The following replacements will be performed:"
+echo "  Text occurrences of:"
+echo "    - ${OLD_NAME}"
+echo "    - ${HYPHENATED_OLD}"
+echo "  will be replaced with:"
+echo "    - ${NEW_PACKAGE_NAME}"
+echo "    - ${HYPHENATED_NEW}"
+echo "in the following files:"
+echo "  - ${SCRIPT_DIR}/.devcontainer/devcontainer.json"
+echo "  - ${SCRIPT_DIR}/.github/workflows/build-test.yml"
+echo "  - ${SCRIPT_DIR}/aica-package.toml"
+echo "  - All files under ${SCRIPT_DIR}/source/"
 echo
 
 # Replace text in fixed files.
-replace_text_in_file "${SCRIPT_DIR}/.devcontainer.json"
+replace_text_in_file "${SCRIPT_DIR}/.devcontainer/devcontainer.json"
 replace_text_in_file "${SCRIPT_DIR}/.github/workflows/build-test.yml"
 replace_text_in_file "${SCRIPT_DIR}/aica-package.toml"
 
@@ -350,7 +346,7 @@ while IFS= read -r -d '' path; do
   else
     replace_text_in_file "${path}"
     if [[ "${base}" == *"${OLD_NAME}"* ]]; then
-      log "Renaming file:"
+      echo "Renaming file:"
       rename_item "${path}"
     fi
   fi
@@ -358,11 +354,11 @@ done < <(find "${SCRIPT_DIR}/source" -print0)
 
 # Rename directories in reverse order (deepest first).
 for (( idx=${#DIRS_TO_RENAME[@]}-1; idx>=0; idx-- )); do
-  log "Renaming directory:"
+  echo "Renaming directory:"
   rename_item "${DIRS_TO_RENAME[$idx]}"
 done
 
 if [[ "${DRY_RUN}" == true ]]; then
   echo
-  log "=== THIS WAS A DRY RUN! NO CHANGES WERE MADE ==="
+  echo "=== THIS WAS A DRY RUN! NO CHANGES WERE MADE ==="
 fi
