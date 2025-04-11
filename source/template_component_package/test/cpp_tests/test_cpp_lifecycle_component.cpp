@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <rclcpp_components/component_manager.hpp>
 
-
 class TestCPPLifecycleComponent : public ::testing::Test {
 protected:
   void SetUp() override {
@@ -14,14 +13,11 @@ protected:
     exec_->add_node(manager_);
   }
 
-  void TearDown() override {
-    rclcpp::shutdown();
-  }
-  
+  void TearDown() override { rclcpp::shutdown(); }
+
   std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> exec_;
   std::shared_ptr<rclcpp_components::ComponentManager> manager_;
 };
-
 
 TEST_F(TestCPPLifecycleComponent, test_component_load) {
   auto resources = manager_->get_component_resources("template_component_package");
