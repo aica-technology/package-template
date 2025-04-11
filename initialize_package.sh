@@ -88,7 +88,7 @@ prompt_yesno() {
       echo "no"
       return
     else
-      echo "Invalid input. Please enter y or n. (Default is n)"
+      echo "Invalid input. Please enter y or n. (Default is y)"
     fi
   done
 }
