@@ -207,8 +207,8 @@ FILES_TO_DELETE=()
 if [[ "${INCLUDE_PYTHON}" == "no" ]]; then
   echo "Python not selected; deleting all Python-related files..."
   FILES_TO_DELETE+=(
-    "source/${OLD_NAME}/requirements.txt
-    "source/${OLD_NAME}/setup.cfg
+    "source/${OLD_NAME}/requirements.txt"
+    "source/${OLD_NAME}/setup.cfg"
     "source/${OLD_NAME}/${OLD_NAME}"
     "source/${OLD_NAME}/test/python_tests"
     "source/${OLD_NAME}/component_descriptions/${OLD_NAME}_py_component.json"
