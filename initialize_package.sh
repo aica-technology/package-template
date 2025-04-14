@@ -314,13 +314,11 @@ if [[ -f "${CMAKE_FILE}" ]]; then
     else
       if [[ "${INCLUDE_CPP_COMPONENT}" == "no" ]]; then
         echo "Removing C++ component registration..."
-        sed_inplace '/CPPComponent/d' "${CMAKE_FILE}"
-        sed_inplace '/cpp_component/d' "${CMAKE_FILE}"
+        sed_inplace '/Register CPPComponent/,/COMPONENTS cpp_component)/d' "${CMAKE_FILE}"
       fi
       if [[ "${INCLUDE_CPP_LIFECYCLE}" == "no" ]]; then
         echo "Removing C++ lifecycle component registration..."
-        sed_inplace '/CPPLifecycleComponent/d' "${CMAKE_FILE}"
-        sed_inplace '/cpp_lifecycle_component/d' "${CMAKE_FILE}"
+        sed_inplace '/Register CPPLifecycleComponent/,/COMPONENTS cpp_lifecycle_component)/d' "${CMAKE_FILE}"
       fi
     fi
   fi
