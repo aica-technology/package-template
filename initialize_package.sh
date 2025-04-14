@@ -207,6 +207,8 @@ FILES_TO_DELETE=()
 if [[ "${INCLUDE_PYTHON}" == "no" ]]; then
   echo "Python not selected; deleting all Python-related files..."
   FILES_TO_DELETE+=(
+    "source/${OLD_NAME}/requirements.txt
+    "source/${OLD_NAME}/setup.cfg
     "source/${OLD_NAME}/${OLD_NAME}"
     "source/${OLD_NAME}/test/python_tests"
     "source/${OLD_NAME}/component_descriptions/${OLD_NAME}_py_component.json"
@@ -308,7 +310,7 @@ if [[ -f "${CMAKE_FILE}" ]]; then
     echo "Dry run: CMakeLists.txt would be updated (component registrations removed based on selection)."
   else
     if [[ "${INCLUDE_CPP}" == "no" ]]; then
-      sed_inplace '/### Register C++ Components ###/,/###############################/d' "${CMAKE_FILE}"
+      sed_inplace '/### Register C++ Components ###/,/RUNTIME DESTINATION bin)/d' "${CMAKE_FILE}"
     else
       if [[ "${INCLUDE_CPP_COMPONENT}" == "no" ]]; then
         echo "Removing C++ component registration..."
