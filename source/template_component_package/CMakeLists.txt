@@ -29,14 +29,12 @@ include_directories(include)
 ament_auto_add_library(cpp_component SHARED ${PROJECT_SOURCE_DIR}/src/CPPComponent.cpp)
 rclcpp_components_register_nodes(cpp_component "${PROJECT_NAME}::CPPComponent")
 list(APPEND COMPONENTS cpp_component)
-
 # Register CPPLifecycleComponent
 ament_auto_add_library(cpp_lifecycle_component SHARED ${PROJECT_SOURCE_DIR}/src/CPPLifecycleComponent.cpp)
 rclcpp_components_register_nodes(cpp_lifecycle_component "${PROJECT_NAME}::CPPLifecycleComponent")
 list(APPEND COMPONENTS cpp_lifecycle_component)
 
 ###############################
-
 
 install(TARGETS ${COMPONENTS}
         ARCHIVE DESTINATION lib
