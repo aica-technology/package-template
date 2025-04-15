@@ -266,10 +266,12 @@ else
 fi
 
 # Delete the specified files/directories.
-for path in "${FILES_TO_DELETE[@]}"; do
-  delete_path "${SCRIPT_DIR}/${path}"
-done
-echo
+if [[ "${FILES_TO_DELETE+1}" ]]; then
+  for path in "${FILES_TO_DELETE[@]}"; do
+    delete_path "${SCRIPT_DIR}/${path}"
+  done
+  echo
+fi
 
 # --- Modify configuration files ---
 
