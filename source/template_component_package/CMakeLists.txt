@@ -19,6 +19,8 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 
+include(InstallAicaDescriptions)
+
 ament_auto_find_build_dependencies()
 
 include_directories(include)
@@ -41,8 +43,7 @@ install(TARGETS ${COMPONENTS}
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin)
 
-install(DIRECTORY ./component_descriptions
-        DESTINATION .)
+install_aica_descriptions(./component_descriptions ${CMAKE_INSTALL_PREFIX}/component_descriptions)
 
 # install Python modules
 ament_python_install_package(${PROJECT_NAME} SCRIPTS_DESTINATION lib/${PROJECT_NAME})
