@@ -14,7 +14,7 @@ version = "0.0.1"
 
 [build]
 type = "ros"
-image = "v2.0.3-jazzy"
+image = "v2.0.4-jazzy"
 
 [build.cmake-args]
 ## add any cmake args here, e.g.
