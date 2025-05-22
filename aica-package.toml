@@ -22,7 +22,7 @@ image = "v2.0.4-jazzy"
 ## you can override them in the CLI with `--build-arg config.build.cmake_args.SOME_FLAG=OFF`
 
 [build.dependencies]
-"@aica/foss/control-libraries" = "v9.1.0"
+"@aica/foss/control-libraries" = "v9.2.0"
 "@aica/foss/modulo" = "v5.2.0"
 
 [build.packages.template-component-package]

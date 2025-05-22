@@ -1,1 +1,4 @@
-# list any python requirements
+cv_bridge
+opencv-python
+open3d
+scikit-learn
