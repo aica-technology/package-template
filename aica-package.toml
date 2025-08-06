@@ -8,9 +8,9 @@ version = "0.0.1"
 ## a metadata name for the collection is required when bundling multiple packages together.
 ## the collection name should be formatted like a Docker image name,
 ## and the ROS equivalent collection name must be formatted in lower_snake_case
-# [metadata.collection]
-# name = "template-custom-collection"
-# ros-name = "template_custom_collection"
+[metadata.collection]
+name = "template-custom-collection"
+ros-name = "template_custom_collection"
 
 [build]
 type = "ros"
@@ -22,13 +22,13 @@ image = "v2.0.5-jazzy"
 ## you can override them in the CLI with `--build-arg config.build.cmake_args.SOME_FLAG=OFF`
 
 [build.dependencies]
-"@aica/foss/control-libraries" = "v9.1.0"
-"@aica/foss/modulo" = "v5.2.0"
+"@aica/foss/control-libraries" = "v9.2.0"
+"@aica/foss/modulo" = "v5.2.2"
 
 [build.packages.template-component-package]
 source = "./source/template_component_package"
 
-## add any required apt dependencies for the custom package.
+## add any required apt dependencies for the custom component.
 ## these packages will be available during the build but also in the final image,
 ## so they are useful for dynamic libraries
 # [build.packages.template-component-package.dependencies.apt]
@@ -43,6 +43,11 @@ source = "./source/template_component_package"
 # [build.packages.template-component-package.dependencies.pip.packages]
 # numpy = "1.0.0"
 
-## if the AICA package contains multiple ROS packages, repeat the process for each ROS package.
-# [build.packages.other-component-package]
-# source = "./source/other_component_package"
+[build.packages.template-controller-package]
+source = "./source/template_controller_package"
+
+## add any required apt dependencies for the custom controller.
+## these packages will be available during the build but also in the final image,
+## so they are useful for dynamic libraries
+# [build.packages.template-controller-package.dependencies.apt]
+# libyaml-cpp-dev = "*"
