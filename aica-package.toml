@@ -51,7 +51,3 @@ source = "./source/template_controller_package"
 ## so they are useful for dynamic libraries
 # [build.packages.template-controller-package.dependencies.apt]
 # libyaml-cpp-dev = "*"
-
-## if the AICA package contains multiple ROS packages, repeat the process for each ROS package.
-# [build.packages.other-component-package]
-# source = "./source/other_component_package"
