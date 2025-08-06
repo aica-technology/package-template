@@ -15,7 +15,6 @@ endif ()
 
 find_package(ament_cmake_auto REQUIRED)
 find_package(control_libraries 9.2.0 CONFIG REQUIRED COMPONENTS state_representation robot_model controllers)
-find_package(yaml-cpp REQUIRED)
 
 include(InstallAicaDescriptions)
 
@@ -26,7 +25,7 @@ include_directories(include)
 ament_auto_add_library(${PROJECT_NAME} SHARED
         src/template_controller.cpp)
 
-target_link_libraries(${PROJECT_NAME} ${control_libraries_LIBRARIES} yaml-cpp)
+target_link_libraries(${PROJECT_NAME} ${control_libraries_LIBRARIES})
 
 pluginlib_export_plugin_description_file(controller_interface controller_plugins.xml)
 
