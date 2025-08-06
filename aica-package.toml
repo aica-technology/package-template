@@ -28,10 +28,7 @@ image = "v2.0.5-jazzy"
 [build.packages.template-component-package]
 source = "./source/template_component_package"
 
-[build.packages.template-controller-package]
-source = "./source/template_controller_package"
-
-## add any required apt dependencies for the custom package.
+## add any required apt dependencies for the custom component.
 ## these packages will be available during the build but also in the final image,
 ## so they are useful for dynamic libraries
 # [build.packages.template-component-package.dependencies.apt]
@@ -45,6 +42,15 @@ source = "./source/template_controller_package"
 ## otherwise you can specify the pip packages directly
 # [build.packages.template-component-package.dependencies.pip.packages]
 # numpy = "1.0.0"
+
+[build.packages.template-controller-package]
+source = "./source/template_controller_package"
+
+## add any required apt dependencies for the custom controller.
+## these packages will be available during the build but also in the final image,
+## so they are useful for dynamic libraries
+# [build.packages.template-controller-package.dependencies.apt]
+# libyaml-cpp-dev = "*"
 
 ## if the AICA package contains multiple ROS packages, repeat the process for each ROS package.
 # [build.packages.other-component-package]
