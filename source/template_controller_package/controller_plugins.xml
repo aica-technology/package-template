@@ -1,7 +1,0 @@
-<library path="template_controller_package">
-    <class name="template_controller_package/TemplateController" type="template_controller_package::TemplateController" base_class_type="controller_interface::ControllerInterface">
-        <description>
-            A description for your controller.
-        </description>
-    </class>
-</library>
