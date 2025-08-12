@@ -6,7 +6,7 @@ except ImportError as exc:
 
 import re
 
-NAME_BLACKLIST = ["controller", "component", "template_component_package", "template_controller_package", "src", "test"]
+BLOCKLIST = ["controller", "component", "template_component_package", "template_controller_package", "src", "test"]
 
 
 def is_snake_case(value: str) -> bool:
@@ -30,7 +30,7 @@ def camel_to_snake(name: str) -> str:
 
 
 def is_valid_package_name(value: str) -> bool:
-    return value not in NAME_BLACKLIST
+    return value not in BLOCKLIST
 
 
 CONFIRMATION_Q = questionary.confirm("Are you happy with this configuration?", default=True)
