@@ -16,12 +16,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # find dependencies
-{% if has_cpp_files -%}
 find_package(ament_cmake_auto REQUIRED)
-{% endif %}
 {% if has_py_files -%}
 find_package(ament_cmake_python REQUIRED)
-{% endif %}
+{% endif -%}
 
 include(InstallAicaDescriptions)
 
@@ -33,13 +31,17 @@ include_directories(include)
 ### Register C++ Components ###
 
 # Register CPPComponent
+{%- if "CPPComponent" in component_templates_included %}
 ament_auto_add_library(cpp_component SHARED ${PROJECT_SOURCE_DIR}/src/CPPComponent.cpp)
 rclcpp_components_register_nodes(cpp_component "${PROJECT_NAME}::CPPComponent")
 list(APPEND COMPONENTS cpp_component)
+{% endif %}
+{%- if "CPPLifecycleComponent" in component_templates_included %}
 # Register CPPLifecycleComponent
 ament_auto_add_library(cpp_lifecycle_component SHARED ${PROJECT_SOURCE_DIR}/src/CPPLifecycleComponent.cpp)
 rclcpp_components_register_nodes(cpp_lifecycle_component "${PROJECT_NAME}::CPPLifecycleComponent")
 list(APPEND COMPONENTS cpp_lifecycle_component)
+{%- endif %}
 
 ###############################
 

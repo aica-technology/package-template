@@ -14,7 +14,7 @@ if [ ! -d "${script_dir}" ]; then
   exit 1
 fi
 if [ -d "${host_sources}/source" ]; then
-  echo -e "\033[31mHost source directory ${host_sources} exists, but the initialization wizard has still not been marked as run. This may indicate a previous failure. Re-running the initialization wizard might not fix the issue.\033[0m"
+  echo -e "\033[31mHost source directory \"${host_sources}/source\" exists, but the initialization wizard has still not been marked as run. This may indicate a previous failure. Re-running the initialization wizard might not fix the issue.\033[0m"
 fi
 
 docker run --rm -it \
