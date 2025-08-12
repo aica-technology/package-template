@@ -2,7 +2,6 @@
 import os
 import re
 import shutil
-import subprocess
 from glob import glob
 from pathlib import Path
 from fnmatch import translate
@@ -55,7 +54,7 @@ def run_wizard():
     if "Controllers" in configuration["templates_chosen"]:
         controller_context["package_name"] = CONTROLLER_PACKAGE_Q.ask()
         controller_context["controller_name"] = CONTROLLER_NAME_Q.ask()
-        controller_context["hardware_interface"] = HARDWARE_IF_Q.ask()
+        controller_context["hardware_interface"] = HARDWARE_IF_Q.ask().lower()
         print("-- Controller configuration complete\n")
 
     if "Components" in configuration["templates_chosen"]:
@@ -130,6 +129,7 @@ def run_wizard():
     fix_permissions(f"{TEMPLATE_TARGET_DIR}/aica-package.toml")
     try:
         rm_files([f"{TEMPLATE_SOURCES}/templates"])
+        rm_files([f"{TEMPLATE_SOURCES}/__pycache__"])
     except OSError as e:
         print(f"Error removing files: {e}")
     print("-- Package initialization complete\n")
