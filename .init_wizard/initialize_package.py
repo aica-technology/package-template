@@ -5,6 +5,7 @@ import shutil
 from glob import glob
 from pathlib import Path
 from fnmatch import translate
+from typing import Optional, List, Dict, LiteralString
 
 from questions import (
     AVAILABLE_TEMPLATES,
@@ -28,6 +29,12 @@ TEMPLATE_TARGET_DIR = os.getenv("TEMPLATE_TARGET_DIR", "/sources")
 
 
 def run_wizard():
+    """
+    :brief: Wizard to initialize a package with templates for controllers and components.
+    :details: This wizard will guide you through the process of setting up your package by asking a series of questions.
+              It will create the necessary files and directories based on your responses, and then self-delete to keep
+              the workspace clean.
+    """
     template_dir = Path(__file__).parent / "templates"
     if not template_dir.exists():
         print("The wizard has already been run before, exiting.")
@@ -138,7 +145,23 @@ def run_wizard():
     print("-- Package initialization complete\n")
 
 
-def populate_templates(env: any, cfg: dict, templates_dir: str, target_dir: str, sub_dir: str = "", exclude: list = []):
+def populate_templates(
+    env: Environment,
+    cfg: Dict,
+    templates_dir: LiteralString,
+    target_dir: LiteralString,
+    sub_dir: LiteralString = "",
+    exclude: Optional[List[LiteralString]] = None,
+):
+    """
+    :brief: Populate the target directory with rendered templates from the templates directory.
+    :param env: The Jinja2 environment used for rendering templates.
+    :param cfg: The configuration dictionary used to render templates.
+    :param templates_dir: The directory containing the template files.
+    :param target_dir: The directory where the rendered templates will be saved.
+    :param sub_dir: The subdirectory within the templates directory to search for templates.
+    :param exclude: A list of file patterns to exclude from processing.
+    """
     pattern = os.path.join(templates_dir, sub_dir, "**", "*.j2")
     absolute_files = glob(pattern, recursive=True)
     if exclude:
@@ -155,7 +178,16 @@ def populate_templates(env: any, cfg: dict, templates_dir: str, target_dir: str,
             print(f"Error writing file: {e}")
 
 
-def populate_common_files(env, configuration: dict, templates_dir: str, target_dir: str):
+def populate_common_files(
+    env: Environment, configuration: Dict, templates_dir: LiteralString, target_dir: LiteralString
+):
+    """
+    :brief: Populate common files in the target directory from the templates directory.
+    :param env: The Jinja2 environment used for rendering templates.
+    :param configuration: The configuration dictionary used to render templates.
+    :param templates_dir: The directory containing the template files.
+    :param target_dir: The directory where the rendered templates will be saved.
+    """
     config_files = glob(os.path.join(templates_dir, ".*", "*.json.j2"))
     toml = env.get_template("aica-package.toml.j2")
     component_toml = env.get_template("aica-package.component.toml.j2")
@@ -204,18 +236,21 @@ def populate_common_files(env, configuration: dict, templates_dir: str, target_d
     )
 
 
-def rename_files_and_directories(controller_context: dict, sources_dir: str):
+def rename_files_and_directories(context: Dict, sources_dir: LiteralString):
+    """
+    :brief: Rename files and directories in the sources directory based on a Jinja2-compatible context dictionary.
+    :param context: The context dictionary used for renaming.
+    :param sources_dir: The directory containing the source files and directories.
+    """
     pattern = os.path.join(sources_dir, "**", "*")
     absolute_files = glob(pattern, recursive=True)
     absolute_files.sort(key=lambda p: len(Path(p).parts), reverse=True)
 
     for abs_path in absolute_files:
         leaf = Path(abs_path).name
-        for key in sorted(
-            controller_context.keys(), key=len, reverse=True
-        ):  # reverse ensures longer strings are replaced first
+        for key in sorted(context.keys(), key=len, reverse=True):  # reverse ensures longer strings are replaced first
             if key in leaf:
-                leaf = leaf.replace(key, controller_context[key])
+                leaf = leaf.replace(key, context[key])
         path = "/".join(list(Path(abs_path).parts[1:-1]))
         renamed = Path(path, leaf)
         try:
@@ -224,7 +259,12 @@ def rename_files_and_directories(controller_context: dict, sources_dir: str):
             print(f"Error renaming {abs_path} to {renamed}: {e}")
 
 
-def write_to_file(filepath: str, content: str):
+def write_to_file(filepath: LiteralString, content: LiteralString):
+    """
+    :brief: Write content to a file, creating any necessary directories in the way.
+    :param filepath: The path to the file to write.
+    :param content: The content to write to the file.
+    """
     try:
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         with open(filepath, "w", encoding="utf-8") as f:
@@ -233,7 +273,12 @@ def write_to_file(filepath: str, content: str):
         print(f"Error writing file: {e}")
 
 
-def fix_permissions(path: str):
+def fix_permissions(path: LiteralString):
+    """
+    :brief: Fix the permissions of a file or directory (recursively; if this is run in a container, this step may be
+            necessary).
+    :param path: The path to the file or directory.
+    """
     uid = int(os.getenv("UID"))
     gid = int(os.getenv("GID"))
     try:
@@ -250,7 +295,11 @@ def fix_permissions(path: str):
         print(f"Error fixing permissions: {e}")
 
 
-def rm_files(files: list):
+def rm_files(files: List):
+    """
+    :brief: Remove files and directories.
+    :param files: The list of files and directories to remove.
+    """
     for file in files:
         if os.path.isdir(file):
             shutil.rmtree(file, ignore_errors=False)
@@ -258,7 +307,13 @@ def rm_files(files: list):
             os.remove(file)
 
 
-def change_env_delimiters(env: any, new_delimiter: dict):
+def change_env_delimiters(env: Environment, new_delimiter: Dict):
+    """
+    :brief: Change the delimiters used in the Jinja2 environment.
+    :param env: The Jinja2 environment to modify.
+    :param new_delimiter: A dictionary containing the new delimiter values.
+    :return: A dictionary containing the original delimiter values.
+    """
     og_delimiters = {
         "block_start_string": env.block_start_string,
         "block_end_string": env.block_end_string,
@@ -273,6 +328,10 @@ def change_env_delimiters(env: any, new_delimiter: dict):
 
 
 def print_configuration(configuration):
+    """
+    :brief: Print the configuration.
+    :param configuration: The configuration to print.
+    """
     print("\nConfiguration:\n")
     for key, value in configuration.items():
         if isinstance(value, dict) and len(value) > 0:
