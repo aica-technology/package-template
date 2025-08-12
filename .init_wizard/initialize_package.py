@@ -77,50 +77,53 @@ def run_wizard():
     print_configuration(configuration)
     exclude = []
 
-    if CONFIRMATION_Q.ask():
-        if configuration["controller"]:
-            controller_context["controller_name_camel"] = camel_to_snake(controller_context["controller_name"])
-            populate_templates(
-                env,
-                controller_context,
-                f"{TEMPLATE_SOURCES}/templates",
-                f"{TEMPLATE_TARGET_DIR}/source/{controller_context['package_name']}",
-                "controller",
-            )
-            rename_files_and_directories(
-                controller_context, f"{TEMPLATE_TARGET_DIR}/source/{controller_context['package_name']}"
-            )
+    if not CONFIRMATION_Q.ask():
+        print("Package initialization aborted.")
+        return
 
-        if configuration["component"]:
-            component_context["package_name_camel"] = camel_to_snake(component_context["package_name"])
-            exclude += list(set(AVAILABLE_TEMPLATES) - set(component_context["component_templates_included"]))
-            exclude += [camel_to_snake(t) for t in exclude]
-            exclude = [t + "*" for t in exclude]
-            if not any(t.startswith("py_") for t in component_context["component_templates_included"]):
-                exclude += ["*.py*"]
-                exclude += ["requirements.txt.j2"]
-                exclude += ["setup.cfg.j2"]
-            else:
-                component_context["has_py_files"] = True
+    if configuration["controller"]:
+        controller_context["controller_name_camel"] = camel_to_snake(controller_context["controller_name"])
+        populate_templates(
+            env,
+            controller_context,
+            f"{TEMPLATE_SOURCES}/templates",
+            f"{TEMPLATE_TARGET_DIR}/source/{controller_context['package_name']}",
+            "controller",
+        )
+        rename_files_and_directories(
+            controller_context, f"{TEMPLATE_TARGET_DIR}/source/{controller_context['package_name']}"
+        )
 
-            if not any(t.startswith("CPP") for t in component_context["component_templates_included"]):
-                exclude += ["*.cpp*"]
-                exclude += ["*.hpp*"]
-            else:
-                component_context["has_cpp_files"] = True
+    if configuration["component"]:
+        component_context["package_name_camel"] = camel_to_snake(component_context["package_name"])
+        exclude += list(set(AVAILABLE_TEMPLATES) - set(component_context["component_templates_included"]))
+        exclude += [camel_to_snake(t) for t in exclude]
+        exclude = [t + "*" for t in exclude]
+        if not any(t.startswith("py_") for t in component_context["component_templates_included"]):
+            exclude += ["*.py*"]
+            exclude += ["requirements.txt.j2"]
+            exclude += ["setup.cfg.j2"]
+        else:
+            component_context["has_py_files"] = True
 
-            populate_templates(
-                env,
-                component_context,
-                f"{TEMPLATE_SOURCES}/templates",
-                f"{TEMPLATE_TARGET_DIR}/source/{component_context['package_name']}",
-                "component",
-                exclude,
-            )
-            rename_files_and_directories(
-                component_context, f"{TEMPLATE_TARGET_DIR}/source/{component_context['package_name']}"
-            )
-        populate_common_files(env, configuration, f"{TEMPLATE_SOURCES}/templates", f"{TEMPLATE_TARGET_DIR}")
+        if not any(t.startswith("CPP") for t in component_context["component_templates_included"]):
+            exclude += ["*.cpp*"]
+            exclude += ["*.hpp*"]
+        else:
+            component_context["has_cpp_files"] = True
+
+        populate_templates(
+            env,
+            component_context,
+            f"{TEMPLATE_SOURCES}/templates",
+            f"{TEMPLATE_TARGET_DIR}/source/{component_context['package_name']}",
+            "component",
+            exclude,
+        )
+        rename_files_and_directories(
+            component_context, f"{TEMPLATE_TARGET_DIR}/source/{component_context['package_name']}"
+        )
+    populate_common_files(env, configuration, f"{TEMPLATE_SOURCES}/templates", f"{TEMPLATE_TARGET_DIR}")
 
     fix_permissions(f"{TEMPLATE_TARGET_DIR}/source")
     fix_permissions(f"{TEMPLATE_TARGET_DIR}/.devcontainer")
