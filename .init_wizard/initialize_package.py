@@ -190,8 +190,6 @@ def populate_common_files(
     """
     config_files = glob(os.path.join(templates_dir, ".*", "*.json.j2"))
     toml = env.get_template("aica-package.toml.j2")
-    component_toml = env.get_template("aica-package.component.toml.j2")
-    controller_toml = env.get_template("aica-package.controller.toml.j2")
 
     for cfg in config_files:
         filepath = os.path.relpath(cfg, templates_dir)
@@ -218,22 +216,7 @@ def populate_common_files(
     write_to_file(f"{target_dir}/.github/workflows/build-test.yml", workflows.render(cfg))
     change_env_delimiters(env, og_delimiters)
 
-    populated_component_toml = ""
-    populated_controller_toml = ""
-    if len(configuration["component"]):
-        populated_component_toml = component_toml.render(configuration["component"])
-    if len(configuration["controller"]):
-        populated_controller_toml = controller_toml.render(configuration["controller"])
-    write_to_file(
-        f"{target_dir}/aica-package.toml",
-        toml.render(
-            {
-                "component_toml": populated_component_toml,
-                "controller_toml": populated_controller_toml,
-                "collection_name": configuration["collection_name"],
-            }
-        ),
-    )
+    write_to_file(f"{target_dir}/aica-package.toml", toml.render(configuration))
 
 
 def rename_files_and_directories(context: Dict, sources_dir: LiteralString):

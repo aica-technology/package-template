@@ -24,9 +24,9 @@ image = "v2.0.5-jazzy"
 [build.dependencies]
 "@aica/foss/control-libraries" = "v9.2.0"
 "@aica/foss/modulo" = "v5.2.2"
-{% if component_toml -%}
-{{ component_toml }}
+{% if component and component|length > 0 %}
+{% include 'aica-package.component.toml.j2' %}
 {% endif %}
-{% if controller_toml -%}
-{{ controller_toml }}
+{%- if controller and controller|length > 0 %}
+{% include 'aica-package.controller.toml.j2' %}
 {% endif %}
