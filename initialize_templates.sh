@@ -23,8 +23,8 @@ docker run --rm -it \
     -e GID="$(id -g)" \
     -e TEMPLATE_SOURCES="${container_template_sources}" \
     -e TEMPLATE_TARGET_DIR="${container_template_target_dir}" \
-    -v "${script_dir}:${container_template_sources}" \
-    -v "${host_sources}:${container_template_target_dir}" \
+    -v ./"${script_dir}:${container_template_sources}" \
+    -v ./"${host_sources}:${container_template_target_dir}" \
     python:3.12-slim \
     bash -c "pip install ${pip_requirements} >> /dev/null 2>&1 && python3 /${container_template_sources}/initialize_package.py"
 
