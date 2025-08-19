@@ -33,6 +33,11 @@ def is_valid_package_name(value: str) -> bool:
     return value not in BLOCKLIST
 
 
+RERUN_Q = questionary.confirm(
+    "The wizard has already been run before, do you want re-run it? (This will remove all previous configurations!)",
+    default=True,
+)
+
 CONFIRMATION_Q = questionary.confirm("Are you happy with this configuration?", default=True)
 
 COLLECTION_NAME_Q = questionary.text(

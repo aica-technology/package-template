@@ -18,6 +18,7 @@ from questions import (
     VSCODE_DEFAULTS_Q,
     COLLECTION_NAME_Q,
     CONFIRMATION_Q,
+    RERUN_Q,
     camel_to_snake,
 )
 
@@ -35,12 +36,26 @@ def run_wizard():
               It will create the necessary files and directories based on your responses, and then self-delete to keep
               the workspace clean.
     """
-    template_dir = Path(__file__).parent / "templates"
-    if not template_dir.exists():
-        print("The wizard has already been run before, exiting.")
-        return
 
-    env = Environment(loader=FileSystemLoader(template_dir))
+    if os.path.exists(f"{TEMPLATE_TARGET_DIR}/aica-package.toml"):
+        if RERUN_Q.ask():
+            try:
+                rm_files(
+                    [
+                        f"{TEMPLATE_TARGET_DIR}/source",
+                        f"{TEMPLATE_TARGET_DIR}/.devcontainer",
+                        f"{TEMPLATE_TARGET_DIR}/.vscode",
+                        f"{TEMPLATE_TARGET_DIR}/.github",
+                        f"{TEMPLATE_TARGET_DIR}/aica-package.toml",
+                    ]
+                )
+            except OSError as e:
+                print(f"Error removing files: {e}")
+        else:
+            print("Package initialization aborted.")
+            exit(0)
+
+    env = Environment(loader=FileSystemLoader(Path(__file__).parent.joinpath("templates")))
 
     print(
         "This package initialization wizard will help you set up your development environment,"
@@ -138,7 +153,6 @@ def run_wizard():
     fix_permissions(f"{TEMPLATE_TARGET_DIR}/.github")
     fix_permissions(f"{TEMPLATE_TARGET_DIR}/aica-package.toml")
     try:
-        rm_files([f"{TEMPLATE_SOURCES}/templates"])
         rm_files([f"{TEMPLATE_SOURCES}/__pycache__"])
     except OSError as e:
         print(f"Error removing files: {e}")
