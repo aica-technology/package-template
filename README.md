@@ -2,13 +2,13 @@
 
 # AICA Package Template
 
-A software development kit for creating custom components for AICA applications.
+A software development kit for creating custom components and controllers for AICA applications.
 
 Full documentation for creating, testing and packaging custom components is available at
-https://docs.aica.tech/docs/category/custom-components.
+https://docs.aica.tech/docs/category/custom-components. # todo: here we don't have something for controllers yet
 
-You will need to have Docker installed in order to develop or build your component package (see
-[Docker installation](https://docs.docker.com/get-docker/)).
+You will need to have Docker installed in order to develop or build your package (see
+[Docker installation](https://docs.docker.com/get-docker/)), and to run the initialization wizard.
 
 ## Create a custom package repository
 
@@ -19,26 +19,19 @@ To create a component package, create a new repository in GitHub using this repo
 Alternatively, you can also clone this repository locally and create a new repository from it.
 
 ```bash
-git clone git@github.com:aica-technology/component-template.git my_component_package
+git clone git@github.com:aica-technology/<TODO>.git my_component_package
 ```
 
-## Initialize the template component package
+## Initialize the extension package template
 
-This template repository uses the placeholder package name `template_component_package` and includes four different
-component types: C++ component, C++ lifecycle component, Python component, and Python lifecycle component.
+When you first clone the template repository, no source will be populated. First, start the initialization wizard by
+executing `./initialize_templates.sh`. An interactive console UI will guide you through the necessary steps to populate
+the directory. During this process, you may opt in/out to specific templates or types of components to generate.
 
-The first step is to rename the package to a meaningful custom name and remove any unnecessary component types. You can
-accomplish this by using the included [`initialize_package`](./initialize_package.sh) script. In a terminal, run
+In case you already ran the wizard, but are not happy with your selection, you may re-run it as if it was the first run.
 
-```bash
-./initialize_package.sh [--dry-run] [--help]
-```
-
-from the top level directory of the repository. The script prompts you with the name for the package and the component
-types that should be included.
-
-If you want to include a second ROS package within the AICA package, create a new package folder in `source` and add it
-to your `aica-package.toml` file under `[build.packages.name_of_new_package]` accordingly.
+If you want to include even more ROS packages within the AICA package, create a new package folder in `source` and add
+it to your `aica-package.toml` file under `[build.packages.name_of_new_package]` accordingly.
 
 ## Configure the package development environment
 
@@ -63,8 +56,7 @@ docker build -f aica-package.toml .
 
 We use a custom Docker frontend instead of a Dockerfile, so all configuration of the build is stored in
 `aica-package.toml`. As we are using `docker build` to build you can pass any Docker argument, like `-t <image_name>` to
-tag the image or `--platform <platform>` to build for a specific platform. Note that you can only build one platform at
-a time at the moment.
+tag the image or `--platform <platform>` to build for a specific platform.
 
 ## Testing your component package
 
