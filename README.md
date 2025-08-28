@@ -37,7 +37,7 @@ will be asked for a collection name and the changes will be reflected in your `a
 If you want to include even more ROS packages within your collection, create a new package folder under `source` and add
 it to your `aica-package.toml` file under `[build.packages.name_of_new_package]` accordingly.
 
-## Configure the package development environment
+## Configure the development environment
 
 This template uses a devContainer configuration ([`devcontainer.json`](./.devcontainer/devcontainer.json)) with base
 AICA Docker images for a seamless integrated development experience.
@@ -54,7 +54,7 @@ If you choose to have multiple packages generated from the template, the wizard 
 should be used for the devContainer configuration. You can always manually change this by editing the
 `devcontainer.json`.
 
-## Building your package template
+## Building your templates
 
 You can build your collection or single package using the following command:
 
