@@ -42,8 +42,9 @@ it to your `aica-package.toml` file under `[build.packages.name_of_new_package]`
 This template uses a devContainer configuration ([`devcontainer.json`](./.devcontainer/devcontainer.json)) with base
 AICA Docker images for a seamless integrated development experience.
 
-Using VSCode and the Dev Containers extension, after creating and renaming the templates, simply open the
-repository in a devcontainer using the "Reopen in Container" command.
+After running the wizard that initializes all configurations, use VSCode and the `Dev Containers` extension by simply
+opening your repository in VSCode. Then, you will be prompted to "Reopen in Container". You may also manually
+"Reopen in Container" through VSCode's command palette.
 
 Other IDEs such as JetBrains can similarly be configured to use development containers.
 
