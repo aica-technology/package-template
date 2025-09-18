@@ -4,8 +4,8 @@
 
 A software development kit for creating custom component and controller extensions for AICA applications.
 
-Custom extensions are built and distributed in ROS 2 compatible packages with additional metadata for
-the AICA System. When an AICA package contains multiple ROS 2 packages, it is referred to as a _collection_.
+Custom extensions are built and distributed in ROS 2 compatible packages with additional metadata for the AICA System.
+When an AICA package contains multiple ROS 2 packages, it is referred to as a _collection_.
 
 Full documentation for creating, testing and packaging custom components is available at
 https://docs.aica.tech/docs/category/custom-components. A page for creating custom controllers is coming soon.
@@ -44,9 +44,9 @@ it to your `aica-package.toml` file under `[build.packages.name_of_new_package]`
 This template uses a devContainer configuration ([`devcontainer.json`](./.devcontainer/devcontainer.json)) with base
 AICA Docker images for a seamless integrated development experience.
 
-After running the wizard that initializes all configurations, use VSCode and the `Dev Containers` extension by simply
-opening your repository in VSCode. Then, you will be prompted to "Reopen in Container". You may also manually
-"Reopen in Container" through VSCode's command palette.
+After running the wizard that initializes all configurations, use VSCode and the [`Dev Containers`](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+extension by simply opening your repository in VSCode. Then, you will be prompted to "Reopen in Container". You may also
+manually "Reopen in Container" through VSCode's command palette.
 
 Other IDEs such as JetBrains can similarly be configured to use development containers.
 
