@@ -57,9 +57,9 @@ If you choose to have multiple packages generated from the template, the wizard 
 should be used for the devContainer configuration. You can always manually change this by editing the
 `devcontainer.json`.
 
-## Building your templates
+## Building your package
 
-You can build your collection or single package using the following command:
+You can build your package using the following command:
 
 ```bash
 docker build -f aica-package.toml .
@@ -69,7 +69,7 @@ We use a custom Docker frontend instead of a Dockerfile, so all configuration of
 `aica-package.toml`. As we are using `docker build` to build you can pass any Docker argument, like `-t <image_name>` to
 tag the image or `--platform <platform>` to build for a specific platform.
 
-## Testing your collection or package
+## Testing your package
 
 You can invoke any unit tests in your package by changing the docker build stage to `test`, e.g.:
 
@@ -77,7 +77,7 @@ You can invoke any unit tests in your package by changing the docker build stage
 docker build -f aica-package.toml --target test .
 ```
 
-## Collection and package configuration with `aica-package.toml`
+## Package configuration with `aica-package.toml`
 
 All build configurations, metadata and dependencies are defined in [aica-package.toml](./aica-package.toml). Refer to
 the [docs](https://docs.aica.tech/docs/reference/custom-components/aica-package-toml) for more details about the syntax.
@@ -123,9 +123,8 @@ file = "requirements.txt"
 numpy = "1.0.0"
 ```
 
-## Using your collection or package
+## Using your package
 
-After you have built and tagged your collection or single package as a docker image, you can use it in your application.
-See the
+After you have built and tagged your package as a docker image, you can use it in your application. See the
 [AICA documentation](https://docs.aica.tech/docs/getting-started/installation-and-launch#configuring-the-aica-system-image)
 for more details.
