@@ -5,10 +5,9 @@
 A software development kit for creating custom components and controllers for AICA applications.
 
 Full documentation for creating, testing and packaging custom components is available at
-https://docs.aica.tech/docs/category/custom-components. A page for creating custom controller is coming soon.
+https://docs.aica.tech/docs/category/custom-components. A page for creating custom controllers is coming soon.
 
-You will need to have Docker installed in order to develop or build your package (see
-[Docker installation](https://docs.docker.com/get-docker/)), and to run the initialization wizard.
+[Docker](https://docs.docker.com/get-docker/) is required to initialize, develop and build your package.
 
 ## Create a custom package template repository
 
@@ -19,7 +18,7 @@ To create a package template, create a new repository in GitHub using this repos
 Alternatively, you can also clone this repository locally and create a new repository from it.
 
 ```bash
-git clone git@github.com:aica-technology/package-template.git my_collection
+git clone git@github.com:aica-technology/package-template.git my_package
 ```
 
 ## Running the package template wizard
@@ -29,9 +28,9 @@ executing `./initialize_templates.sh`. An interactive console UI will guide you 
 the directory. During this process, you may opt in/out to specific templates or types of components to generate.
 
 In case you already ran the wizard, but are not happy with your selection, you may re-run it as if it was the first run.
-This will remove any files previously created through the wizard.
+**This will remove any files previously created through the wizard!**
 
-If you select more than one packages during the wizard run, the wizard will generate a `collection` of packages. You
+If you select more than one packages during the wizard run, the wizard will generate a _collection_ of packages. You
 will be asked for a collection name and the changes will be reflected in your `aica-package.toml`.
 
 If you want to include even more ROS packages within your collection, create a new package folder under `source` and add
