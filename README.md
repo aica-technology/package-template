@@ -2,7 +2,10 @@
 
 # AICA Package Template
 
-A software development kit for creating custom components and controllers for AICA applications.
+A software development kit for creating custom component and controller extensions for AICA applications.
+
+Custom extensions are built and distributed in ROS 2 compatible packages with additional metadata for
+the AICA System. When an AICA package contains multiple ROS 2 packages, it is referred to as a _collection_.
 
 Full documentation for creating, testing and packaging custom components is available at
 https://docs.aica.tech/docs/category/custom-components. A page for creating custom controllers is coming soon.
