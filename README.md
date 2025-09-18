@@ -39,6 +39,10 @@ will be asked for a collection name and the changes will be reflected in your `a
 If you want to include even more ROS packages within your collection, create a new package folder under `source` and add
 it to your `aica-package.toml` file under `[build.packages.name_of_new_package]` accordingly.
 
+For the purposes of this README, we refer to both collection and (mono-)package outputs simply as "package". The only
+differences between them are the adjustments specified in `aica-package.toml`; otherwise, no additional steps are
+required.
+
 ## Configure the development environment
 
 This template uses a devContainer configuration ([`devcontainer.json`](./.devcontainer/devcontainer.json)) with base
