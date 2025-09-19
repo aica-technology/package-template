@@ -7,7 +7,7 @@ container_template_sources="/ws"
 container_template_target_dir="/source"
 host_sources="."
 
-pip_requirements="questionary==2.1.0 jinja2==3.0.0"
+pip_requirements="questionary==2.0.1 jinja2==3.0.0"
 
 docker run --rm -it \
     -e IN_DOCKER=1 \

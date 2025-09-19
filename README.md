@@ -2,58 +2,66 @@
 
 # AICA Package Template
 
-A software development kit for creating custom components for AICA applications.
+A software development kit for creating custom component and controller extensions for AICA applications.
+
+Custom extensions are built and distributed in ROS 2 compatible packages with additional metadata for the AICA System.
+When an AICA package contains multiple ROS 2 packages, it is referred to as a _collection_.
 
 Full documentation for creating, testing and packaging custom components is available at
-https://docs.aica.tech/docs/category/custom-components.
+https://docs.aica.tech/docs/category/custom-components. A page for creating custom controllers is coming soon.
 
-You will need to have Docker installed in order to develop or build your component package (see
-[Docker installation](https://docs.docker.com/get-docker/)).
+[Docker](https://docs.docker.com/get-docker/) is required to initialize, develop and build your package.
 
-## Create a custom package repository
+## Create a custom package template repository
 
-To create a component package, create a new repository in GitHub using this repository as a template.
+To create a package template, create a new repository in GitHub using this repository as a template.
 
 ![Use this template menu](docs/creation-1.png) ![Create new repository menu](docs/creation-2.png)
 
 Alternatively, you can also clone this repository locally and create a new repository from it.
 
 ```bash
-git clone git@github.com:aica-technology/component-template.git my_component_package
+git clone git@github.com:aica-technology/package-template.git my_package
 ```
 
-## Initialize the template component package
+## Running the package template wizard
 
-This template repository uses the placeholder package name `template_component_package` and includes four different
-component types: C++ component, C++ lifecycle component, Python component, and Python lifecycle component.
+When you first clone the template repository, no source will be populated. First, start the initialization wizard by
+executing `./initialize_templates.sh`. An interactive console UI will guide you through the necessary steps to populate
+the directory. During this process, you may opt in/out to specific templates or types of components to generate.
 
-The first step is to rename the package to a meaningful custom name and remove any unnecessary component types. You can
-accomplish this by using the included [`initialize_package`](./initialize_package.sh) script. In a terminal, run
+In case you already ran the wizard, but are not happy with your selection, you may re-run it as if it was the first run.
+**This will remove any files previously created through the wizard!**
 
-```bash
-./initialize_package.sh [--dry-run] [--help]
-```
+If you select more than one packages during the wizard run, the wizard will generate a _collection_ of packages. You
+will be asked for a collection name and the changes will be reflected in your `aica-package.toml`.
 
-from the top level directory of the repository. The script prompts you with the name for the package and the component
-types that should be included.
+If you want to include even more ROS packages within your collection, create a new package folder under `source` and add
+it to your `aica-package.toml` file under `[build.packages.name_of_new_package]` accordingly.
 
-If you want to include a second ROS package within the AICA package, create a new package folder in `source` and add it
-to your `aica-package.toml` file under `[build.packages.name_of_new_package]` accordingly.
+For the purposes of this README, we refer to both collection and (mono-)package outputs simply as "package". The only
+differences between them are the adjustments specified in `aica-package.toml`; otherwise, no additional steps are
+required.
 
-## Configure the package development environment
+## Configure the development environment
 
 This template uses a devContainer configuration ([`devcontainer.json`](./.devcontainer/devcontainer.json)) with base
 AICA Docker images for a seamless integrated development experience.
 
-Using VSCode and the Dev Containers extension, after creating and renaming the template package, simply open the
-repository in a devcontainer using the "Reopen in Container" command.
+After running the wizard that initializes all configurations, use VSCode and the [`Dev Containers`](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+extension by simply opening your repository in VSCode. Then, you will be prompted to "Reopen in Container". You may also
+manually "Reopen in Container" through VSCode's command palette.
 
 Other IDEs such as JetBrains can similarly be configured to use development containers.
 
 If any changes are made to aica-package.toml (including any package names or dependencies), remember to rebuild the
 devcontainer.
 
-## Building your component package
+If you choose to have multiple packages generated from the template, the wizard will ask you which collection package
+should be used for the devContainer configuration. You can always manually change this by editing the
+`devcontainer.json`.
+
+## Building your package
 
 You can build your package using the following command:
 
@@ -63,10 +71,9 @@ docker build -f aica-package.toml .
 
 We use a custom Docker frontend instead of a Dockerfile, so all configuration of the build is stored in
 `aica-package.toml`. As we are using `docker build` to build you can pass any Docker argument, like `-t <image_name>` to
-tag the image or `--platform <platform>` to build for a specific platform. Note that you can only build one platform at
-a time at the moment.
+tag the image or `--platform <platform>` to build for a specific platform.
 
-## Testing your component package
+## Testing your package
 
 You can invoke any unit tests in your package by changing the docker build stage to `test`, e.g.:
 
@@ -120,7 +127,7 @@ file = "requirements.txt"
 numpy = "1.0.0"
 ```
 
-## Using your component package
+## Using your package
 
 After you have built and tagged your package as a docker image, you can use it in your application. See the
 [AICA documentation](https://docs.aica.tech/docs/getting-started/installation-and-launch#configuring-the-aica-system-image)
