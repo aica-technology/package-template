@@ -104,7 +104,7 @@ def run_wizard():
         return
 
     if configuration["controller"]:
-        controller_context["controller_name_camel"] = camel_to_snake(controller_context["controller_name"])
+        controller_context["controller_name_snake"] = camel_to_snake(controller_context["controller_name"])
         populate_templates(
             env,
             controller_context,
@@ -117,7 +117,6 @@ def run_wizard():
         )
 
     if configuration["component"]:
-        component_context["package_name_camel"] = camel_to_snake(component_context["package_name"])
         exclude += list(set(AVAILABLE_TEMPLATES) - set(component_context["component_templates_included"]))
         exclude += [camel_to_snake(t) for t in exclude]
         exclude = [t + "*" for t in exclude]
