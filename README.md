@@ -1,6 +1,9 @@
 [![Open in Dev Container](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/aica-technology/component-template)
 
-# AICA Package Template
+> [!IMPORTANT]
+> This organization and its content are not affiliated, associated, authorized, endorsed by, or in any way officially connected with aicas GmbH, Karlsruhe, Germany (www.aicas.com and https://github.com/aicas). Any references to “AICA” are strictly historic.
+
+# Package Template
 
 A software development kit for creating custom component and controller extensions for AICA applications.
 
